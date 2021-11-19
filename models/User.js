@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please enter your surname']
     },
     age: {
-        type: String
+        type: Number
     },
     members: [
         {
