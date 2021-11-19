@@ -8,8 +8,10 @@ const router = Router();
 router.post('/api/signup', authController.signup_post);
 router.post('/api/memberReg', authController.member_reg_post);
 router.post('/api/login', authController.login_post);
+router.post('/api/grabUser', authController.user_grab);
 
 // taskController
 router.post('/api/taskAdd', taskController.task_add);
+router.post('/api/taskGrab', taskController.task_grab);
 
 module.exports = router;

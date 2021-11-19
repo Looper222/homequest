@@ -106,7 +106,6 @@ const member_reg_post = async (req, res) => {
         res.status(400).json({ error: "member reg error"});
     }
 };
-
 // #endregion
 
 // #region Login_Post
@@ -119,15 +118,35 @@ const login_post = async (req, res) => {
         const token = createToken(user._id);
 
         console.log('login_post -> job done');
-        res.status(200).json({ token: token });
+        res.status(200).json({ id: user._id , token: token });
     } catch (err) {
         console.log(err)
     }
 };
 // #endregion
 
+// #region User_Grab
+
+const user_grab = async (req, res) => {
+    const { userID } = req.body;
+
+    try {
+        const grabbedUser = User.findOne({_id: userID}).select('_id login fname surname').lean();
+
+        console.log(grabbedUser);
+        res.status(200).json(grabbedUser);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: "user not found"});
+    }
+}
+// nie działa
+
+// #endregion
+
 module.exports = {
     signup_post,
     member_reg_post,
-    login_post
+    login_post,
+    user_grab
 }
