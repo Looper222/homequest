@@ -131,10 +131,10 @@ const user_grab = async (req, res) => {
     const { userID } = req.body;
 
     try {
-        const grabbedUser = User.findOne({_id: userID}).select('_id login fname surname').lean();
+        const user = await User.findById(userID).select('-password').lean();
 
-        console.log(grabbedUser);
-        res.status(200).json(grabbedUser);
+        // console.log(user);
+        res.status(200).json(user);
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "user not found"});

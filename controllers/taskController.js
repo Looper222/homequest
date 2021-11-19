@@ -34,10 +34,14 @@ const task_grab = async (req, res) => {
     const { userID, taskID } =  req.body;
 
     try {
-        const grabbedTask = User.findOne({ tasks: { _id: taskID }}).select('tasks');
+        // const task = await User.aggregate([{"$match": {"tasks._id": taskID }}, {"$group": { _id: "$_id"}}]);
+        // const task = await User.aggregate([{"$arraElemAt": ["$tasks", 0]}]);
+        const task = await User.find({_id: userID}, { tasks: { $elemMatch: { _id: taskID }}, _id: 0});
 
-        console.log(grabbedTask);
-        res.status(200).json(grabbedTask);
+        console.log(task);
+
+
+        res.status(200).json(task);
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "task was not grabbed"});
