@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema({
             priority: Boolean,
             description: String,
             flashesAmount: Number,
+            state: Number,
             time: Date
         }
     ]
