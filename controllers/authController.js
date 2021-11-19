@@ -94,30 +94,20 @@ const member_reg_post = async (req, res) => {
     try {
         const isAdult = false;
         const user = await User.create({ login, password, fname, surname, isAdult });
-        const member = {
-            _id: user._id,
+        const member = await {
+            _id: user._id.toString(),
             fname: user.fname
         };
-
-        const memberAdd = await User.findOneAndUpdate(
-            { _id: parentID },
-            { $addToSet: { familyMembers: member }},
-            (err) => {
-                if (err) {
-                    console.log(err);
-                    res.status(400).json({ operationStatus: 'Failed'});
-                } else {
-                    res.status(201).json({ operationStatus: 'Completed'});
-                }
-            }
-        );
-
-        console.log('member_reg_post -> job done');
-        res.status(200).json(user);
+        const memberReg = await User.updateOne({ _id: parentID }, { $addToSet: { familyMembers: member }});
+        console.log(member);
+        res.status(200).json(member);
+        // console.log('member_reg_post -> job done');
+        // res.status(200).json(user);
     } catch (err) {
         console.log(err);
     }
 };
+
 // #endregion
 
 // #region Login_Post

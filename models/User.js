@@ -33,7 +33,18 @@ const userSchema = new mongoose.Schema({
     isAdult: {
         type: Boolean,
         required: true
-    }
+    },
+    tasks: [
+        {
+            _id: String,
+            title: String,
+            avatar: Number,
+            priority: Boolean,
+            description: String,
+            flashesAmount: Number,
+            time: Date
+        }
+    ]
 });
 
 // #endregion
