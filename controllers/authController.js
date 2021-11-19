@@ -30,9 +30,6 @@ const handleErrorsSignup = (err) => {
     //     fname: '',
     //     surname: '',
     //     password: '',
-    //     phoneNumber: '',
-    //     birthDate: '',
-    //     gender: ''
     // }
 
     let errors = {
@@ -60,12 +57,16 @@ const handleErrorsSignup = (err) => {
 
 // #endregion
 
-// const maxAge = 4 * 24 * 60 * 60;
+// #region TokenIinit
+const maxAge = 4 * 24 * 60 * 60;
 
 const createToken = (id) => {
     return jwt.sign({ id }, 'jNTT1iPgSTGGnmah', { expiresIn: maxAge });
 }
 
+// #endregion
+
+// #region Signup_Post
 const signup_post = async (req, res) => {
     const { login, password, fname, surname } = req.body;
 
@@ -83,16 +84,41 @@ const signup_post = async (req, res) => {
         console.log(err);
     }
 };
+// #endregion
 
+// #region Member_Reg_Post
 const member_reg_post = async (req, res) => {
+    var { parentID, login, password, fname, surname, age=null } = req.body;
+
     try {
-        console.log('member_reg_post');
-        res.status(200).json('member_reg_post');
+        const user = await User.create({ login, password, fname, surname });
+        const member = {
+            _id: user._id,
+            fname: user.fname
+        };
+
+        const memberAdd = await User.findOneAndUpdate(
+            { _id: parentID },
+            { $addToSet: { familyMembers: member }},
+            (err) => {
+                if (err) {
+                    console.log(err);
+                    res.status(400).json({ operationStatus: 'Failed'});
+                } else {
+                    res.status(201).json({ operationStatus: 'Completed'});
+                }
+            }
+        );
+
+        console.log('member_reg_post -> job done');
+        res.status(200).json(user);
     } catch (err) {
         console.log(err);
     }
 };
+// #endregion
 
+// #region Login_Post
 const login_post = async (req, res) => {
     const { login, password } = req.body;
 
@@ -107,6 +133,7 @@ const login_post = async (req, res) => {
         console.log(err)
     }
 };
+// #endregion
 
 module.exports = {
     signup_post,

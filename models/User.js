@@ -20,7 +20,16 @@ const userSchema = new mongoose.Schema({
     surname: {
         type: String,
         required: [true, 'Please enter your surname']
-    }
+    },
+    age: {
+        type: String
+    },
+    familyMembers: [
+        {
+            _id: String,
+            fname: String
+        }
+    ]
 });
 
 // #endregion
@@ -37,7 +46,7 @@ userSchema.pre('save', async function(next) {
 
 // #region PreLogin
 
-userSchema.statics.login = async (login, password) => {
+userSchema.statics.login = async function(login, password) {
     const user = await this.findOne({ login: login });
     if (user) {
         const auth = await bcrypt.compare(password, user.password);
