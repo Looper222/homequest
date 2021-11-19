@@ -31,7 +31,17 @@ const task_add = async (req, res) => {
 }
 
 const task_grab = async (req, res) => {
+    const { userID, taskID } =  req.body;
 
+    try {
+        const grabbedTask = User.findOne({ tasks: { _id: taskID }}).select('tasks');
+
+        console.log(grabbedTask);
+        res.status(200).json(grabbedTask);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: "task was not grabbed"});
+    }
 }
 
 const task_complete = async (req, res) => {
