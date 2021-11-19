@@ -74,7 +74,6 @@ const signup_post = async (req, res) => {
 
         const token = createToken(user._id);
 
-
         console.log('signup_post -> job done');
         res.status(200).json({
             user: user._id,
@@ -95,9 +94,15 @@ const member_reg_post = async (req, res) => {
 };
 
 const login_post = async (req, res) => {
+    const { login, password } = req.body;
+
     try {
-        console.log('login_post');
-        res.status(200).json('login_post');
+        const user = await User.login( login, password );
+
+        const token = createToken(user._id);
+
+        console.log('login_post -> job done');
+        res.status(200).json({ token: token });
     } catch (err) {
         console.log(err)
     }
