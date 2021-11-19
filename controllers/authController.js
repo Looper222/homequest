@@ -30,9 +30,6 @@ const handleErrorsSignup = (err) => {
     //     fname: '',
     //     surname: '',
     //     password: '',
-    //     phoneNumber: '',
-    //     birthDate: '',
-    //     gender: ''
     // }
 
     let errors = {
@@ -60,38 +57,75 @@ const handleErrorsSignup = (err) => {
 
 // #endregion
 
+// #region TokenIinit
 const maxAge = 4 * 24 * 60 * 60;
 
 const createToken = (id) => {
     return jwt.sign({ id }, 'jNTT1iPgSTGGnmah', { expiresIn: maxAge });
 }
 
+// #endregion
+
+// #region Signup_Post
 const signup_post = async (req, res) => {
+    const { login, password, fname, surname } = req.body;
+
     try {
-        console.log('signup_post');
-        res.status(200).json('signup_post');
+        const isAdult = true;
+        const user = await User.create({ login, password, fname, surname, isAdult });
+
+        const token = createToken(user._id);
+
+        console.log('signup_post -> job done');
+        res.status(200).json({
+            user: user._id,
+            token: token
+        });
     } catch (err) {
         console.log(err);
     }
 };
+// #endregion
 
+// #region Member_Reg_Post
 const member_reg_post = async (req, res) => {
+    var { parentID, login, password, fname, surname, age=null } = req.body;
+
     try {
-        console.log('member_reg_post');
-        res.status(200).json('member_reg_post');
+        const isAdult = false;
+        const user = await User.create({ login, password, fname, surname, isAdult });
+        const member = await {
+            _id: user._id.toString(),
+            fname: user.fname
+        };
+        const memberReg = await User.updateOne({ _id: parentID }, { $addToSet: { familyMembers: member }});
+        console.log(member);
+        res.status(200).json(member);
+        // console.log('member_reg_post -> job done');
+        // res.status(200).json(user);
     } catch (err) {
         console.log(err);
     }
 };
 
+// #endregion
+
+// #region Login_Post
 const login_post = async (req, res) => {
+    const { login, password } = req.body;
+
     try {
-        console.log('login_post');
-        res.status(200).json('login_post');
+        const user = await User.login( login, password );
+
+        const token = createToken(user._id);
+
+        console.log('login_post -> job done');
+        res.status(200).json({ token: token });
     } catch (err) {
         console.log(err)
     }
 };
+// #endregion
 
 module.exports = {
     signup_post,
