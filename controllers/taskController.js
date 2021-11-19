@@ -14,6 +14,7 @@ const task_add = async (req, res) => {
         priority: priority,
         description: description,
         flashesAmount: flashesAmount,
+        _type: 1,
         time: time
     }
 
@@ -34,10 +35,14 @@ const task_grab = async (req, res) => {
     const { userID, taskID } =  req.body;
 
     try {
-        const grabbedTask = User.findOne({ tasks: { _id: taskID }}).select('tasks');
+        // const task = await User.aggregate([{"$match": {"tasks._id": taskID }}, {"$group": { _id: "$_id"}}]);
+        // const task = await User.aggregate([{"$arraElemAt": ["$tasks", 0]}]);
+        const task = await User.find({_id: userID}, { tasks: { $elemMatch: { _id: taskID }}, _id: 0});
 
-        console.log(grabbedTask);
-        res.status(200).json(grabbedTask);
+        console.log(task);
+
+
+        res.status(200).json(task);
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "task was not grabbed"});
@@ -53,7 +58,17 @@ const task_edit = async (req, res) => {
 }
 
 const task_delete = async (req, res) => {
+    const { userID, taskID } = req.body;
 
+    try {
+        const task = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
+        const found = await User.find({_id: userID}, { tasks: 1});
+        console.log(task);
+        res.status(200).json(found);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: "task hasn't been deleted"});
+    }
 }
 
 module.exports = {
