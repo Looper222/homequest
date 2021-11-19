@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     age: {
         type: String
     },
-    familyMembers: [
+    members: [
         {
             _id: String,
             fname: String

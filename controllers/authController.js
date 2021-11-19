@@ -98,13 +98,12 @@ const member_reg_post = async (req, res) => {
             _id: user._id.toString(),
             fname: user.fname
         };
-        const memberReg = await User.updateOne({ _id: parentID }, { $addToSet: { familyMembers: member }});
+        const memberReg = await User.updateOne({ _id: parentID }, { $addToSet: { members: member }});
         console.log(member);
         res.status(200).json(member);
-        // console.log('member_reg_post -> job done');
-        // res.status(200).json(user);
     } catch (err) {
         console.log(err);
+        res.status(400).json({ error: "member reg error"});
     }
 };
 
