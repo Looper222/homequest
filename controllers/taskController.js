@@ -14,6 +14,7 @@ const task_add = async (req, res) => {
         priority: priority,
         description: description,
         flashesAmount: flashesAmount,
+        _type: 1,
         time: time
     }
 
@@ -57,7 +58,17 @@ const task_edit = async (req, res) => {
 }
 
 const task_delete = async (req, res) => {
+    const { userID, taskID } = req.body;
 
+    try {
+        const task = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
+        const found = await User.find({_id: userID}, { tasks: 1});
+        console.log(task);
+        res.status(200).json(found);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: "task hasn't been deleted"});
+    }
 }
 
 module.exports = {

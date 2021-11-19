@@ -13,5 +13,6 @@ router.post('/api/grabUser', authController.user_grab);
 // taskController
 router.post('/api/taskAdd', taskController.task_add);
 router.post('/api/taskGrab', taskController.task_grab);
+router.post('/api/taskDelete', taskController.task_delete);
 
 module.exports = router;
