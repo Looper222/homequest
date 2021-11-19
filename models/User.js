@@ -29,7 +29,11 @@ const userSchema = new mongoose.Schema({
             _id: String,
             fname: String
         }
-    ]
+    ],
+    isAdult: {
+        type: Boolean,
+        required: true
+    }
 });
 
 // #endregion

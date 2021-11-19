@@ -71,7 +71,8 @@ const signup_post = async (req, res) => {
     const { login, password, fname, surname } = req.body;
 
     try {
-        const user = await User.create({ login, password, fname, surname });
+        const isAdult = true;
+        const user = await User.create({ login, password, fname, surname, isAdult });
 
         const token = createToken(user._id);
 
@@ -91,7 +92,8 @@ const member_reg_post = async (req, res) => {
     var { parentID, login, password, fname, surname, age=null } = req.body;
 
     try {
-        const user = await User.create({ login, password, fname, surname });
+        const isAdult = false;
+        const user = await User.create({ login, password, fname, surname, isAdult });
         const member = {
             _id: user._id,
             fname: user.fname
