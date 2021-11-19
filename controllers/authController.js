@@ -60,16 +60,26 @@ const handleErrorsSignup = (err) => {
 
 // #endregion
 
-const maxAge = 4 * 24 * 60 * 60;
+// const maxAge = 4 * 24 * 60 * 60;
 
 const createToken = (id) => {
     return jwt.sign({ id }, 'jNTT1iPgSTGGnmah', { expiresIn: maxAge });
 }
 
 const signup_post = async (req, res) => {
+    const { login, password, fname, surname } = req.body;
+
     try {
-        console.log('signup_post');
-        res.status(200).json('signup_post');
+        const user = await User.create({ login, password, fname, surname });
+
+        const token = createToken(user._id);
+
+
+        console.log('signup_post -> job done');
+        res.status(200).json({
+            user: user._id,
+            token: token
+        });
     } catch (err) {
         console.log(err);
     }
