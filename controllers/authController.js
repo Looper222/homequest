@@ -69,10 +69,11 @@ const createToken = (id) => {
 // #region Signup_Post
 const signup_post = async (req, res) => {
     const { login, password, fname, surname } = req.body;
+    const funds = 0;
 
     try {
         const isAdult = true;
-        const user = await User.create({ login, password, fname, surname, isAdult });
+        const user = await User.create({ login, password, fname, surname, isAdult,  funds});
 
         const token = createToken(user._id);
 
@@ -144,9 +145,29 @@ const user_grab = async (req, res) => {
 
 // #endregion
 
+// #region Funds_Set
+
+const funds_set = async (req, res) => {
+    const { userID, funds } = req.body;
+
+    try {
+        // const fundsInfo = await User.aggregate([{$set: { "funds": funds }}])
+        const fundsInfo = await User.updateOne({_id: userID}, {$set: { "funds": funds }});
+
+        console.log(fundsInfo);
+        res.status(200).json(fundsInfo);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: "funds haven't been set"});
+    }
+}
+
+// #endregion
+
 module.exports = {
     signup_post,
     member_reg_post,
     login_post,
-    user_grab
+    user_grab,
+    funds_set
 }

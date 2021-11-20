@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
+    funds: Number,
     tasks: [
         {
             _id: String,
