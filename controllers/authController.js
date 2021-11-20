@@ -132,7 +132,8 @@ const login_post = async (req, res) => {
         console.log('login_post -> job done');
         res.status(200).json({ id: user._id , token: token });
     } catch (err) {
-        console.log(err)
+        console.log(err);
+        res.status(400).json("login process failed");
     }
 };
 // #endregion
