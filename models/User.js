@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     funds: Number,
+    blockedFunds: Number,
     tasks: [
         {
             _id: String,

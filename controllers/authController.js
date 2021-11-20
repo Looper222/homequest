@@ -57,7 +57,7 @@ const handleErrorsSignup = (err) => {
 
 // #endregion
 
-// #region TokenIinit
+// #region TokenInit
 const maxAge = 4 * 24 * 60 * 60;
 
 const createToken = (id) => {
@@ -70,10 +70,11 @@ const createToken = (id) => {
 const signup_post = async (req, res) => {
     const { login, password, fname, surname } = req.body;
     const funds = 0;
+    const blockedFunds = 0;
 
     try {
         const isAdult = true;
-        const user = await User.create({ login, password, fname, surname, isAdult,  funds});
+        const user = await User.create({ login, password, fname, surname, isAdult,  funds, blockedFunds});
 
         const token = createToken(user._id);
 
