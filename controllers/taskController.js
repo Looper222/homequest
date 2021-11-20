@@ -54,7 +54,45 @@ const task_complete = async (req, res) => {
 }
 
 const task_edit = async (req, res) => {
+    const { userID, taskID, title, avatar, priority, description, flashesAmount, _type, time } = req.body;
 
+    const task = {
+        _id: taskID,
+        title: title,
+        avatar: avatar,
+        priority: priority,
+        description: description,
+        flashesAmount: flashesAmount,
+        _type: _type,
+        time: time
+    }
+
+    try {
+        const task = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
+        const found = await User.find({_id: userID}, { tasks: 1});
+        console.log(task);
+        res.status(200).json(found);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: "error"})
+    }
+//     try {
+//         const taskd = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
+//         console.log(taskd);
+//         const afterd = await User.find({_id: userID}, { tasks: 1});
+//         console.log(afterd);
+//         // const taskAdd = await User.updateOne(
+//         //     { _id: userID},
+//         //     { $addToSet: { tasks: task}}
+//         // );
+//         // console.log(taskAdd);
+
+//         console.log(task);
+//         res.status(200).json(task);
+//     } catch (err) {
+//         console.log(err);
+//         res.status(400).json({ error: "task hasn't been edited"});
+//     }
 }
 
 const task_delete = async (req, res) => {
