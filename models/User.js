@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema({
     blockedFunds: Number,
     tasks: [
         {
+            childName: String,
             _id: String,
             title: String,
             avatar: Number,

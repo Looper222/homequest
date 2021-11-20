@@ -7,9 +7,10 @@ const task_add = async (req, res) => {
     const uniqueID = () => {
         return Math.floor(Math.random() * Date.now());
     }
+    const makeID = uniqueID();
 
     const task = {
-        _id: uniqueID(),
+        _id: makeID,
         title: title,
         avatar: avatar,
         priority: priority,
@@ -18,6 +19,7 @@ const task_add = async (req, res) => {
         _type: 0,
         time: time
     }
+
 
     try {
         const taskAdd = await User.updateOne(
@@ -28,6 +30,21 @@ const task_add = async (req, res) => {
         const parentFunds = await User.findById(parentID).select('funds -_id').lean();
         console.log(parentFunds);
         const parentData = await User.updateOne({_id: parentID}, { $set: { blockedFunds: flashesAmount, funds: parentFunds.funds - flashesAmount}});
+
+        const childName = await User.findById(userID).select(' fname -_id').lean();
+        console.log(childName);
+        const taskSec = {
+            childName: childName.fname,
+            _id: makeID,
+            title: title,
+            avatar: avatar,
+            priority: priority,
+            description: description,
+            flashesAmount: flashesAmount,
+            _type: 0,
+            time: time
+        };
+        const parentUp = await User.updateOne({_id: parentID}, { $addToSet: { tasks: taskSec}});
 
         res.status(200).json(task);
     } catch (err) {
