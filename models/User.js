@@ -27,13 +27,16 @@ const userSchema = new mongoose.Schema({
     members: [
         {
             _id: String,
-            fname: String
+            fname: String,
+            parent: Boolean
         }
     ],
     isAdult: {
         type: Boolean,
         required: true
     },
+    funds: Number,
+    blockedFunds: Number,
     tasks: [
         {
             _id: String,

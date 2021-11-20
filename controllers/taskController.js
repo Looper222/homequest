@@ -1,7 +1,8 @@
 const User = require('../models/User');
 
+// #region Task_Add
 const task_add = async (req, res) => {
-    const { userID, title, avatar, priority, description, flashesAmount, time } = req.body;
+    const { parentID, userID, title, avatar, priority, description, flashesAmount, time } = req.body;
     // dodać operacje na czasie !!!!
     const uniqueID = () => {
         return Math.floor(Math.random() * Date.now());
@@ -24,13 +25,19 @@ const task_add = async (req, res) => {
             { $addToSet: { tasks: task}}
         );
 
+        const parentFunds = await User.findById(parentID).select('funds -_id').lean();
+        console.log(parentFunds);
+        const parentData = await User.updateOne({_id: parentID}, { $set: { blockedFunds: flashesAmount, funds: parentFunds.funds - flashesAmount}});
+
         res.status(200).json(task);
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "Task was not added"});
     }
 }
+// #endregion
 
+// #region Task_Grab
 const task_grab = async (req, res) => {
     const { userID, taskID } =  req.body;
 
@@ -48,11 +55,23 @@ const task_grab = async (req, res) => {
         res.status(400).json({ error: "task was not grabbed"});
     }
 }
+// #endregion
 
+// #region Task_Complete
 const task_complete = async (req, res) => {
 
 }
+// #endregion
 
+// #region Task_Approve
+
+const task_approve = async (req, res) => {
+    
+}
+
+// #endregion
+
+// #region Task_Edit
 const task_edit = async (req, res) => {
     const { userID, taskID, title, avatar, priority, description, flashesAmount, _type, time } = req.body;
 
@@ -81,7 +100,9 @@ const task_edit = async (req, res) => {
         res.status(400).json({ error: "task hasn't been deleted"});
     }
 }
+// #endregion
 
+// #region Task_Delete
 const task_delete = async (req, res) => {
     const { userID, taskID } = req.body;
 
@@ -95,6 +116,7 @@ const task_delete = async (req, res) => {
         res.status(400).json({ error: "task hasn't been deleted"});
     }
 }
+// #endregion
 
 module.exports = {
     task_add,

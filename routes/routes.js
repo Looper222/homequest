@@ -9,6 +9,7 @@ router.post('/api/signup', authController.signup_post);
 router.post('/api/memberReg', authController.member_reg_post);
 router.post('/api/login', authController.login_post);
 router.post('/api/grabUser', authController.user_grab);
+router.post('/api/fundsSet', authController.funds_set);
 
 // taskController
 router.post('/api/taskAdd', taskController.task_add);

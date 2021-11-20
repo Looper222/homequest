@@ -57,7 +57,7 @@ const handleErrorsSignup = (err) => {
 
 // #endregion
 
-// #region TokenIinit
+// #region TokenInit
 const maxAge = 4 * 24 * 60 * 60;
 
 const createToken = (id) => {
@@ -69,10 +69,12 @@ const createToken = (id) => {
 // #region Signup_Post
 const signup_post = async (req, res) => {
     const { login, password, fname, surname } = req.body;
+    const funds = 0;
+    const blockedFunds = 0;
 
     try {
         const isAdult = true;
-        const user = await User.create({ login, password, fname, surname, isAdult });
+        const user = await User.create({ login, password, fname, surname, isAdult,  funds, blockedFunds});
 
         const token = createToken(user._id);
 
@@ -96,9 +98,17 @@ const member_reg_post = async (req, res) => {
         const user = await User.create({ login, password, fname, surname, isAdult });
         const member = await {
             _id: user._id.toString(),
-            fname: user.fname
+            fname: user.fname,
+            parent: false
         };
         const memberReg = await User.updateOne({ _id: parentID }, { $addToSet: { members: member }});
+        const parent = await User.findById(parentID).select(' fname ').lean();
+        const parentInfo = {
+            _id: parent._id,
+            fname: parent.fname,
+            parent: true
+        }
+        const child = await User.updateOne({_id: member._id}, { $addToSet: { members: parentInfo}});
         console.log(member);
         res.status(200).json(member);
     } catch (err) {
@@ -144,9 +154,30 @@ const user_grab = async (req, res) => {
 
 // #endregion
 
+// #region Funds_Set
+
+const funds_set = async (req, res) => {
+    const { userID, funds } = req.body;
+
+    try {
+        const fundsInfo = await User.updateOne({_id: userID}, {$set: { "funds": funds }});
+        const wallet = await User.findById(userID).select(' funds ').lean();
+
+        console.log(fundsInfo);
+        console.log(wallet);
+        res.status(200).json({ userID: wallet._id, funds: wallet.funds});
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: "funds haven't been set"});
+    }
+}
+
+// #endregion
+
 module.exports = {
     signup_post,
     member_reg_post,
     login_post,
-    user_grab
+    user_grab,
+    funds_set
 }
