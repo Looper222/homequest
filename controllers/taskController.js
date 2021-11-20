@@ -88,6 +88,22 @@ const task_complete = async (req, res) => {
             { _id: userID},
             { $addToSet: { tasks: taskData}}
         );
+        const childName = await User.findById(userID).select(' fname members -_id').lean();
+        console.log(childName);
+        const parentID = childName.member[0]._id;
+        const taskPData = {
+            childName: childName.fname,
+            _id: taskData._id,
+            title: taskData.title,
+            avatar: taskData.avatar,
+            priority: taskData.priority,
+            description: taskData.description,
+            flashesAmount: taskData.flashesAmount,
+            _type: 3,
+            time: taskData.time
+        }
+        const parentDel = await User.updateOne({_id: parentID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
+        const parentUp = await User.updateOne({_id: parentID}, { $addToSet: { tasks: taskPData}});
         res.status(200).json(taskData);
     } catch (err) {
         console.log(err);
