@@ -42,12 +42,12 @@ const userSchema = new mongoose.Schema({
             childName: String,
             _id: String,
             title: String,
-            avatar: Number,
-            priority: Boolean,
+            /*avatar: Number,
+            priority: Boolean,*/
             description: String,
             flashesAmount: Number,
             _type: Number,
-            time: Date
+            /*time: Date*/
         }
     ]
 });
