@@ -63,22 +63,15 @@ const task_complete = async (req, res) => {
     const { userID, taskID } = req.body;
 
     try {
-        const taskRawData = await User.find({_id: userID}, { tasks: { $elemMatch: {_id: taskID }}, _id: 0});
-        // const taskData = taskRawData.shift();
-        console.log(taskRawData);
-        const taskData = taskRawData.tasks[0];
-        // const taskData = taskD.shift();
-        console.log(taskData);
+        const task = await User.find({_id: userID}, { tasks: { $elemMatch: { _id: taskID }}, _id: 0});
+        const taskData = task[0].tasks[0];
         taskData._type = 1;
-        console.log(taskData);
-        const task = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
-        const taskAdd = await User.updateOne(
+        const pullTask = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
+        const upTask = await User.updateOne(
             { _id: userID},
             { $addToSet: { tasks: taskData}}
         );
-        const taskCheck = await User.find({_id: userID}, { tasks: { $elemMatch: {_id: taskID }}, _id: 0});
-        console.log(taskCheck);
-        res.status(200).json(taskCheck);
+        res.status(200).json(taskData);
     } catch (err) {
         console.log(err);
         res.status(400).json("task_complete operation failed");
