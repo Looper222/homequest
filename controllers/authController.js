@@ -151,11 +151,12 @@ const funds_set = async (req, res) => {
     const { userID, funds } = req.body;
 
     try {
-        // const fundsInfo = await User.aggregate([{$set: { "funds": funds }}])
         const fundsInfo = await User.updateOne({_id: userID}, {$set: { "funds": funds }});
+        const wallet = await User.findById(userID).select(' funds ').lean();
 
         console.log(fundsInfo);
-        res.status(200).json(fundsInfo);
+        console.log(wallet);
+        res.status(200).json({ userID: wallet._id, funds: wallet.funds});
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "funds haven't been set"});
