@@ -90,7 +90,7 @@ const task_complete = async (req, res) => {
         );
         const childName = await User.findById(userID).select(' fname members -_id').lean();
         console.log(childName);
-        const parentID = childName.member[0]._id;
+        const parentID = childName.members[0]._id;
         const taskPData = {
             childName: childName.fname,
             _id: taskData._id,
