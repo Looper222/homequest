@@ -16,5 +16,6 @@ router.post('/api/taskAdd', taskController.task_add);
 router.post('/api/taskGrab', taskController.task_grab);
 router.post('/api/taskDelete', taskController.task_delete);
 router.post('/api/taskEdit', taskController.task_edit);
+router.post('/api/taskComplete', taskController.task_complete);
 
 module.exports = router;

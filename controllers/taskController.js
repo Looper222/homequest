@@ -3,7 +3,7 @@ const User = require('../models/User');
 // #region Task_Add
 const task_add = async (req, res) => {
     const { parentID, userID, title, avatar, priority, description, flashesAmount, time } = req.body;
-    // dodać operacje na czasie !!!!
+
     const uniqueID = () => {
         return Math.floor(Math.random() * Date.now());
     }
@@ -45,11 +45,12 @@ const task_grab = async (req, res) => {
         // const task = await User.aggregate([{"$match": {"tasks._id": taskID }}, {"$group": { _id: "$_id"}}]);
         // const task = await User.aggregate([{"$arraElemAt": ["$tasks", 0]}]);
         const task = await User.find({_id: userID}, { tasks: { $elemMatch: { _id: taskID }}, _id: 0});
+        const person = await User.findById(userID).select(' fname -_id').lean();
 
         console.log(task);
 
 
-        res.status(200).json(task);
+        res.status(200).json({ task: task, user: person});
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "task was not grabbed"});
@@ -62,7 +63,22 @@ const task_complete = async (req, res) => {
     const { userID, taskID } = req.body;
 
     try {
-        
+        const taskRawData = await User.find({_id: userID}, { tasks: { $elemMatch: {_id: taskID }}, _id: 0});
+        // const taskData = taskRawData.shift();
+        console.log(taskRawData);
+        const taskData = taskRawData.tasks[0];
+        // const taskData = taskD.shift();
+        console.log(taskData);
+        taskData._type = 1;
+        console.log(taskData);
+        const task = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
+        const taskAdd = await User.updateOne(
+            { _id: userID},
+            { $addToSet: { tasks: taskData}}
+        );
+        const taskCheck = await User.find({_id: userID}, { tasks: { $elemMatch: {_id: taskID }}, _id: 0});
+        console.log(taskCheck);
+        res.status(200).json(taskCheck);
     } catch (err) {
         console.log(err);
         res.status(400).json("task_complete operation failed");
@@ -130,5 +146,6 @@ module.exports = {
     task_grab,
     task_complete,
     task_edit,
-    task_delete
+    task_delete,
+    task_approve
 }
