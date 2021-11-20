@@ -69,7 +69,7 @@ const createToken = (id) => {
 // #region Signup_Post
 const signup_post = async (req, res) => {
     const { login, password, fname, surname } = req.body;
-    const funds = 0;
+    const funds = 10000;
     const blockedFunds = 0;
 
     try {
@@ -92,10 +92,12 @@ const signup_post = async (req, res) => {
 // #region Member_Reg_Post
 const member_reg_post = async (req, res) => {
     var { parentID, login, password, fname, surname, age=null } = req.body;
+    const funds = 0;
+    const blockedFunds = 0;
 
     try {
         const isAdult = false;
-        const user = await User.create({ login, password, fname, surname, isAdult });
+        const user = await User.create({ login, password, fname, surname, isAdult, funds, blockedFunds });
         const member = await {
             _id: user._id.toString(),
             fname: user.fname,
