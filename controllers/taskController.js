@@ -7,9 +7,10 @@ const task_add = async (req, res) => {
     const uniqueID = () => {
         return Math.floor(Math.random() * Date.now());
     }
+    const makeID = uniqueID();
 
     const task = {
-        _id: uniqueID(),
+        _id: makeID,
         title: title,
         avatar: avatar,
         priority: priority,
@@ -18,6 +19,7 @@ const task_add = async (req, res) => {
         _type: 0,
         time: time
     }
+
 
     try {
         const taskAdd = await User.updateOne(
@@ -28,6 +30,21 @@ const task_add = async (req, res) => {
         const parentFunds = await User.findById(parentID).select('funds -_id').lean();
         console.log(parentFunds);
         const parentData = await User.updateOne({_id: parentID}, { $set: { blockedFunds: flashesAmount, funds: parentFunds.funds - flashesAmount}});
+
+        const childName = await User.findById(userID).select(' fname -_id').lean();
+        console.log(childName);
+        const taskSec = {
+            childName: childName.fname,
+            _id: makeID,
+            title: title,
+            avatar: avatar,
+            priority: priority,
+            description: description,
+            flashesAmount: flashesAmount,
+            _type: 0,
+            time: time
+        };
+        const parentUp = await User.updateOne({_id: parentID}, { $addToSet: { tasks: taskSec}});
 
         res.status(200).json(task);
     } catch (err) {
@@ -63,22 +80,31 @@ const task_complete = async (req, res) => {
     const { userID, taskID } = req.body;
 
     try {
-        const taskRawData = await User.find({_id: userID}, { tasks: { $elemMatch: {_id: taskID }}, _id: 0});
-        // const taskData = taskRawData.shift();
-        console.log(taskRawData);
-        const taskData = taskRawData.tasks[0];
-        // const taskData = taskD.shift();
-        console.log(taskData);
+        const task = await User.find({_id: userID}, { tasks: { $elemMatch: { _id: taskID }}, _id: 0});
+        const taskData = task[0].tasks[0];
         taskData._type = 1;
-        console.log(taskData);
-        const task = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
-        const taskAdd = await User.updateOne(
+        const pullTask = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
+        const upTask = await User.updateOne(
             { _id: userID},
             { $addToSet: { tasks: taskData}}
         );
-        const taskCheck = await User.find({_id: userID}, { tasks: { $elemMatch: {_id: taskID }}, _id: 0});
-        console.log(taskCheck);
-        res.status(200).json(taskCheck);
+        const childName = await User.findById(userID).select(' fname members -_id').lean();
+        console.log(childName);
+        const parentID = childName.member[0]._id;
+        const taskPData = {
+            childName: childName.fname,
+            _id: taskData._id,
+            title: taskData.title,
+            avatar: taskData.avatar,
+            priority: taskData.priority,
+            description: taskData.description,
+            flashesAmount: taskData.flashesAmount,
+            _type: 3,
+            time: taskData.time
+        }
+        const parentDel = await User.updateOne({_id: parentID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
+        const parentUp = await User.updateOne({_id: parentID}, { $addToSet: { tasks: taskPData}});
+        res.status(200).json(taskData);
     } catch (err) {
         console.log(err);
         res.status(400).json("task_complete operation failed");
