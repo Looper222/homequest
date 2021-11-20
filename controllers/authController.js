@@ -153,7 +153,6 @@ const user_grab = async (req, res) => {
         res.status(400).json({ error: "user not found"});
     }
 }
-// nie działa
 
 // #endregion
 
