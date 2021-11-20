@@ -27,7 +27,8 @@ const userSchema = new mongoose.Schema({
     members: [
         {
             _id: String,
-            fname: String
+            fname: String,
+            parent: Boolean
         }
     ],
     isAdult: {

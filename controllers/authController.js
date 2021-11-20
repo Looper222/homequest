@@ -97,9 +97,17 @@ const member_reg_post = async (req, res) => {
         const user = await User.create({ login, password, fname, surname, isAdult });
         const member = await {
             _id: user._id.toString(),
-            fname: user.fname
+            fname: user.fname,
+            parent: false
         };
         const memberReg = await User.updateOne({ _id: parentID }, { $addToSet: { members: member }});
+        const parent = await User.findById(parentID).select(' fname ').lean();
+        const parentInfo = {
+            _id: parent._id,
+            fname: parent.fname,
+            parent: true
+        }
+        const child = await User.updateOne({_id: member._id}, { $addToSet: { members: parentInfo}});
         console.log(member);
         res.status(200).json(member);
     } catch (err) {
