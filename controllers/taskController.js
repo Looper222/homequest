@@ -15,7 +15,7 @@ const task_add = async (req, res) => {
         priority: priority,
         description: description,
         flashesAmount: flashesAmount,
-        _type: 1,
+        _type: 0,
         time: time
     }
 
@@ -59,14 +59,21 @@ const task_grab = async (req, res) => {
 
 // #region Task_Complete
 const task_complete = async (req, res) => {
+    const { userID, taskID } = req.body;
 
+    try {
+        
+    } catch (err) {
+        console.log(err);
+        res.status(400).json("task_complete operation failed");
+    }
 }
 // #endregion
 
 // #region Task_Approve
 
 const task_approve = async (req, res) => {
-    
+
 }
 
 // #endregion
