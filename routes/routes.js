@@ -198,6 +198,99 @@ router.post('/api/login', authController.login_post);
 router.post('/api/grabUser', authController.user_grab);
 router.post('/api/fundsSet', authController.funds_set);
 
+// #region SWAGGER_SCHEMAS_TASKS
+/**
+ * @swagger
+ *  components:
+ *      schemas:
+ *          Task:
+ *              type: object
+ *              required:
+ *                  - userID
+ *                  - title
+ *                  - description
+ *                  - flashesAmount
+ *              properties:
+ *                  userID:
+ *                      type: string
+ *                      description: Child's ID
+ *                  title:
+ *                      type: string
+ *                      description: Title for new task
+ *                  description:
+ *                      type: string
+ *                      description: Task description
+ *                  flashesAmount:
+ *                      type: number
+ *                      description: The number of flashes assigned to the task
+ *              example:
+ *                  userID: 619f723f683803812973014e
+ *                  title: Mowing the lawn
+ *                  description: You have to mow the lawn
+ *                  flashesAmount: 20
+ *          TaskAdd:
+ *              allOf:
+ *              - #ref: '#/components/Task'
+ *              - type: object
+ *              required:
+ *                  - parentID
+ *                  - userID
+ *                  - title
+ *                  - description
+ *                  - flashesAmount
+ *              properties:
+ *                  parentID:
+ *                      type: string
+ *                      description: Parent's ID of given user
+ *              example:
+ *                  parentID: 619a5777ea73aa2a056c472c
+ *                  userID: 619f723f683803812973014e
+ *                  title: Mowing the lawn
+ *                  description: You have to mow the lawn
+ *                  flashesAmount: 20
+ *          TaskEdit:
+ *              allOf:
+ *              - #ref: '#/components/Task'
+ *              - type: object
+ *              required:
+ *                  - userID
+ *                  - taskID
+ *                  - title
+ *                  - description
+ *                  - flashesAmount
+ *                  - _type
+ *              properties:
+ *                  taskID:
+ *                      type: string
+ *                      description: ID of given task
+ *              example:
+ *                  parentID: 619a5777ea73aa2a056c472c
+ *                  userID: 619f723f683803812973014e
+ *                  title: Mowing the lawn
+ *                  description: You have to mow the lawn
+ *                  flashesAmount: 20
+ */
+// #endregion
+
+// $region SWAGGER_TASK_ADD
+/**
+ * @swagger
+ *  /api/taskAdd:
+ *      post:
+ *          tags:
+ *              - Task operations
+ *          summary: Adding new task for a user
+ *          requestBody:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/TaskAdd'
+ *          responses:
+ *              200:
+ *                  description: Task has been successfully added
+ */
+// #endregion
+
 // taskController
 router.post('/api/taskAdd', taskController.task_add);
 router.post('/api/taskGrab', taskController.task_grab);
