@@ -66,6 +66,30 @@ const router = Router();
  *          password: kwakwa5!
  *          fname: kidf1
  *          surname: kids1
+ *     IdNeeded:
+ *      required:
+ *          - userID
+ *      propreties:
+ *          userID:
+ *              type: string
+ *              description: User's ID
+ *      example:
+ *          userID: 619a5777ea73aa2a056c472c
+ *     FundsSet:
+ *      allOf:
+ *      - $ref: '#/components/schemas/IdNeeded'
+ *      - type: object
+ *      required:
+ *          - userID
+ *          - funds
+ *      properties:
+ *          funds:
+ *              type: number
+ *              description: Funds amount to set for user
+ *      example:
+ *          userID: 619a5777ea73aa2a056c472c
+ *          funds: 888
+ *     
  */
 
 // #endregion
@@ -120,6 +144,40 @@ const router = Router();
  *          responses:
  *              200:
  *                  description: Member user has been created
+ */
+// #endregion
+
+// #region GRAB_USER
+/**
+ * @swagger
+ *  /api/grabUser:
+ *      post:
+ *          summary: Returns all user informations
+ *          requestBody:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/IdNeeded'
+ *          responses:
+ *              200:
+ *                  description: User data has been grabbed
+ */
+// #endregion
+
+// #region FUNDS_SET
+/**
+ * @swagger
+ *  /api/fundsSet:
+ *      post:
+ *          summary: Setting amount of user's funds
+ *          requestBody:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/FundsSet'
+ *          responses:
+ *              200:
+ *                  description: Amount of user's funds has been set
  */
 // #endregion
 

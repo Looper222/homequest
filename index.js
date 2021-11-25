@@ -15,10 +15,12 @@ const options = {
         },
         servers: [
             {
-                url: "http://localhost:3001"
+                url: "http://localhost:3001",
+                description: 'Development version'
             },
             {
-                url: "https://homequest.herokuapp.com/"
+                url: "https://homequest.herokuapp.com/",
+                description: 'Deployed version'
             }
         ],
     },
