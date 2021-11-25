@@ -100,6 +100,8 @@ const router = Router();
  * @swagger
  *  /api/login:
  *      post:
+ *          tags:
+ *              - User operations
  *          summary: The proccess of user logging in.
  *          requestBody:
  *              content:
@@ -118,6 +120,8 @@ const router = Router();
  * @swagger
  *  /api/signup:
  *      post:
+ *          tags:
+ *              - User operations
  *          summary: The proccess of user registration
  *          requestBody:
  *              content:
@@ -135,6 +139,8 @@ const router = Router();
  * @swagger
  *  /api/memberReg:
  *      post:
+ *          tags:
+ *              - User operations
  *          summary: The proccess of creating family member (kid)
  *          requestBody:
  *              content:
@@ -152,6 +158,8 @@ const router = Router();
  * @swagger
  *  /api/grabUser:
  *      post:
+ *          tags:
+ *              - User operations
  *          summary: Returns all user informations
  *          requestBody:
  *              content:
@@ -169,6 +177,8 @@ const router = Router();
  * @swagger
  *  /api/fundsSet:
  *      post:
+ *          tags:
+ *              - User operations
  *          summary: Setting amount of user's funds
  *          requestBody:
  *              content:
