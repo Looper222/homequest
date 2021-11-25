@@ -27,23 +27,27 @@ const userSchema = new mongoose.Schema({
     members: [
         {
             _id: String,
-            fname: String
+            fname: String,
+            parent: Boolean
         }
     ],
     isAdult: {
         type: Boolean,
         required: true
     },
+    funds: Number,
+    blockedFunds: Number,
     tasks: [
         {
+            childName: String,
             _id: String,
             title: String,
-            avatar: Number,
-            priority: Boolean,
+            /*avatar: Number,
+            priority: Boolean,*/
             description: String,
             flashesAmount: Number,
             _type: Number,
-            time: Date
+            /*time: Date*/
         }
     ]
 });
