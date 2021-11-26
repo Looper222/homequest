@@ -95,7 +95,6 @@ const router = Router();
 // #endregion
 
 // #region LOGIN_POST
-
 /**
  * @swagger
  *  /api/login:
@@ -112,7 +111,6 @@ const router = Router();
  *              200:
  *                  description: User has been logged in
  */
-
 // #endregion
 
 // #region SIGNUP_POST
@@ -132,7 +130,7 @@ const router = Router();
  *              200:
  *                  description: User has been registered
  */
-// #
+// #endregion
 
 // #region MEMBER_REG_POST
 /**
@@ -191,12 +189,13 @@ const router = Router();
  */
 // #endregion
 
-// authController
+// #region CONTROLLER_ROUTES_authController
 router.post('/api/signup', authController.signup_post);
 router.post('/api/memberReg', authController.member_reg_post);
 router.post('/api/login', authController.login_post);
 router.post('/api/grabUser', authController.user_grab);
 router.post('/api/fundsSet', authController.funds_set);
+// #endregion
 
 // #region SWAGGER_SCHEMAS_TASKS
 /**
@@ -292,7 +291,7 @@ router.post('/api/fundsSet', authController.funds_set);
  */
 // #endregion
 
-// $region SWAGGER_TASK_ADD
+// #region SWAGGER_TASK_ADD
 /**
  * @swagger
  *  /api/taskAdd:
@@ -406,13 +405,14 @@ router.post('/api/fundsSet', authController.funds_set);
  */
 // #endregion
 
-// taskController
+// #region CONTROLLER_ROUTES_taskController
 router.post('/api/taskAdd', taskController.task_add);
 router.post('/api/taskGrab', taskController.task_grab);
 router.post('/api/taskDelete', taskController.task_delete);
 router.post('/api/taskEdit', taskController.task_edit);
 router.post('/api/taskComplete', taskController.task_complete);
 router.post('/api/taskApprove', taskController.task_approve);
+// #endregion
 
 module.exports = router;
 
