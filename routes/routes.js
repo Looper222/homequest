@@ -198,6 +198,214 @@ router.post('/api/login', authController.login_post);
 router.post('/api/grabUser', authController.user_grab);
 router.post('/api/fundsSet', authController.funds_set);
 
+// #region SWAGGER_SCHEMAS_TASKS
+/**
+ * @swagger
+ *  components:
+ *      schemas:
+ *          Task:
+ *              type: object
+ *              required:
+ *                  - userID
+ *                  - title
+ *                  - description
+ *                  - flashesAmount
+ *              properties:
+ *                  userID:
+ *                      type: string
+ *                      description: Child's ID
+ *                  title:
+ *                      type: string
+ *                      description: Title for new task
+ *                  description:
+ *                      type: string
+ *                      description: Task description
+ *                  flashesAmount:
+ *                      type: number
+ *                      description: The number of flashes assigned to the task
+ *              example:
+ *                  userID: 619f723f683803812973014e
+ *                  title: Mowing the lawn
+ *                  description: You have to mow the lawn
+ *                  flashesAmount: 20
+ *          TaskAdd:
+ *              allOf:
+ *              - #ref: '#/components/Task'
+ *              - type: object
+ *              required:
+ *                  - parentID
+ *                  - userID
+ *                  - title
+ *                  - description
+ *                  - flashesAmount
+ *              properties:
+ *                  parentID:
+ *                      type: string
+ *                      description: Parent's ID of given user
+ *              example:
+ *                  parentID: 619a5777ea73aa2a056c472c
+ *                  userID: 619f723f683803812973014e
+ *                  title: Mowing the lawn
+ *                  description: You have to mow the lawn
+ *                  flashesAmount: 20
+ *          TaskEdit:
+ *              allOf:
+ *              - #ref: '#/components/Task'
+ *              - type: object
+ *              required:
+ *                  - userID
+ *                  - taskID
+ *                  - title
+ *                  - description
+ *                  - flashesAmount
+ *                  - _type
+ *              properties:
+ *                  taskID:
+ *                      type: string
+ *                      description: ID of given task
+ *                  _type:
+ *                      type: number
+ *                      description: Task status
+ *              example:
+ *                  userID: 619f723f683803812973014e
+ *                  taskID: 1395368568480
+ *                  title: Mowing the lawn
+ *                  description: You have to mow the lawn behind the house
+ *                  flashesAmount: 20
+ *                  _type: 1
+ *          TaskID:
+ *              type: object
+ *              required:
+ *                  - userID
+ *                  - taskID
+ *              properties:
+ *                  userID:
+ *                      type: string
+ *                      description: ID of kid who task is belonged to
+ *                  taskID:
+ *                      type: string
+ *                      description: ID of wanted task
+ *              example:
+ *                  userID: 619f723f683803812973014e
+ *                  taskID: 1395368568480
+ *
+ */
+// #endregion
+
+// $region SWAGGER_TASK_ADD
+/**
+ * @swagger
+ *  /api/taskAdd:
+ *      post:
+ *          tags:
+ *              - Task operations
+ *          summary: Adding new task for a user
+ *          requestBody:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/TaskAdd'
+ *          responses:
+ *              200:
+ *                  description: Task has been successfully added
+ */
+// #endregion
+
+// #region SWAGGER_TASK_EDIT
+/**
+ * @swagger
+ *  /api/taskEdit:
+ *      post:
+ *          tags:
+ *              - Task operations
+ *          summary: Editing existing task
+ *          requestBody:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/TaskEdit'
+ *          responses:
+ *              200:
+ *                  description: Task has been edited
+ */
+// #endregion
+
+// #region SWAGGER_TASK_GRAB
+/**
+ * @swagger
+ *  /api/taskGrab:
+ *      post:
+ *          tags:
+ *              - Task operations
+ *          summary: Grabbing existing task
+ *          requestBody:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/TaskID'
+ *          responses:
+ *              200:
+ *                  description: Task has been grabbed
+ */
+// #endregion
+
+// #region SWAGGER_TASK_DELETE
+/**
+ * @swagger
+ *  /api/taskDelete:
+ *      post:
+ *          tags:
+ *              - Task operations
+ *          summary: Deleting existing task
+ *          requestBody:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/TaskID'
+ *          responses:
+ *              200:
+ *                  description: Task has been deleted
+ */
+// #endregion
+
+// #region SWAGGER_TASK_COMPLETE
+/**
+ * @swagger
+ *   /api/taskComplete:
+ *      post:
+ *          tags:
+ *              - Task operations
+ *          summary: Setting to complete existing task
+ *          requestBody:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/TaskID'
+ *          responses:
+ *              200:
+ *                  description: Task has been set to completed
+ */
+// #endregion
+
+// #region SWAGGER_TASK_APPROVE
+/**
+ * @swagger
+ *   /api/taskApprove:
+ *      post:
+ *          tags:
+ *              - Task operations
+ *          summary: Set to appove existing task
+ *          requestBody:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/TaskID'
+ *          responses:
+ *              200:
+ *                  description: Task has been set to approve
+ */
+// #endregion
+
 // taskController
 router.post('/api/taskAdd', taskController.task_add);
 router.post('/api/taskGrab', taskController.task_grab);
