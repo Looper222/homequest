@@ -2,7 +2,7 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const yenv = require('yenv');
 const env = yenv();
-const { decodeID, decodeRefreshToken } = require('../middleware/tokenMiddleware');
+const { decodeID, decodeToken } = require('../middleware/tokenMiddleware');
 
 // #region ErrorHandlerLogin
 
@@ -68,7 +68,7 @@ const handleErrorsSignup = (err) => {
 // }
 
 const createToken = (id) => {
-    return jwt.sign({ id }, env.TOKEN_SECRET, { expiresIn: 35 });
+    return jwt.sign({ id }, env.TOKEN_SECRET, { expiresIn: 86400 });
 }
 
 const createRefreshToken = (id) => {
@@ -90,10 +90,7 @@ const signup_post = async (req, res) => {
         const token = createToken(user._id);
         const refreshToken = createRefreshToken(user._id);
 
-        // tymczasowe rozwiązanie z przechowywaniem w bazie
         const foundUser = await User.updateOne({_id: user._id }, { $set: { "refreshToken": refreshToken }});
-        console.log(foundUser);
-        // dokonczyc z logowaniem
 
         console.log('signup_post -> job done');
         res.status(200).json({
@@ -168,7 +165,6 @@ const user_grab = async (req, res) => {
     try {
         const user = await User.findById(userID).select('-password').lean();
 
-        // console.log(user);
         res.status(200).json(user);
     } catch (err) {
         console.log(err);
@@ -202,27 +198,29 @@ const funds_set = async (req, res) => {
 
 // #region TOKEN_REFRESH
 const token_refresh = async (req, res) => {
-    // const userID = decodeID(req);
-    const { refreshToken } = req.body;
+    const { oldToken, refreshToken } = req.body;
 
     if (!refreshToken) {
         return res.status(401);
     }
-    const userID = decodeRefreshToken(refreshToken);
-    console.log(userID);
+    const userID = decodeToken(oldToken);
 
-    console.log(refreshToken);
+    const foundToken = await User.findById(userID).select('refreshToken -_id').lean();
 
-    try {
-        await jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET);
-    } catch (err) {
-        console.log(err);
-        return res.sendStatus(403);
+    if (foundToken.refreshToken === refreshToken) {
+        try {
+            await jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET);
+        } catch (err) {
+            console.log(err);
+            return res.sendStatus(403);
+        }
+
+        const token = jwt.sign({ id: userID }, env.TOKEN_SECRET, { expiresIn: 86400 });
+
+        res.status(200).json({ token });
+    } else {
+        res.status(403).json({ error: "Invalid refresh token!"});
     }
-
-    const accessToken = jwt.sign({ id: userID }, env.TOKEN_SECRET, { expiresIn: 86400 });
-
-    res.status(200).json({ accessToken });
 }
 // #endregion
 

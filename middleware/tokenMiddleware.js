@@ -25,7 +25,7 @@ const decodeID = (req) => {
     return userID;
 }
 
-const decodeRefreshToken = (refreshToken) => {
+const decodeToken = (refreshToken) => {
     const decodedToken = jwt.decode(refreshToken);
     const userID = decodedToken.id;
     return userID;
@@ -34,5 +34,5 @@ const decodeRefreshToken = (refreshToken) => {
 module.exports = {
     authenticate,
     decodeID,
-    decodeRefreshToken
+    decodeToken
 }
