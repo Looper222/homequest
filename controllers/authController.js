@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const yenv = require('yenv');
+const env = yenv();
 
 // #region ErrorHandlerLogin
 
@@ -58,10 +60,18 @@ const handleErrorsSignup = (err) => {
 // #endregion
 
 // #region TokenInit
-const maxAge = 4 * 24 * 60 * 60;
+// const maxAge = 86400;
+
+// const createToken = (id) => {
+//     return jwt.sign({ id }, 'jNTT1iPgSTGGnmah', { expiresIn: maxAge });
+// }
 
 const createToken = (id) => {
-    return jwt.sign({ id }, 'jNTT1iPgSTGGnmah', { expiresIn: maxAge });
+    return jwt.sign({ id }, env.TOKEN_SECRET, { expiresIn: 30 });
+}
+
+const createRefreshToken = (id) => {
+    return jwt.sign({ id }, env.REFRESH_TOKEN_SECRET, { expiresIn: 525600 });
 }
 
 // #endregion
@@ -77,11 +87,18 @@ const signup_post = async (req, res) => {
         const user = await User.create({ login, password, fname, surname, isAdult,  funds, blockedFunds});
 
         const token = createToken(user._id);
+        const refreshToken = createRefreshToken(user._id);
+
+        // tymczasowe rozwiązanie z przechowywaniem w bazie
+        const foundUser = await User.updateOne({_id: user._id }, { $set: { "refreshToken": refreshToken }});
+        console.log(foundUser);
+        // dokonczyc z logowaniem
 
         console.log('signup_post -> job done');
         res.status(200).json({
             user: user._id,
-            token: token
+            token: token,
+            refreshToken: refreshToken
         });
     } catch (err) {
         console.log(err);
@@ -128,6 +145,9 @@ const login_post = async (req, res) => {
         const user = await User.login( login, password );
 
         const token = createToken(user._id);
+        const refreshToken = createRefreshToken(user._id);
+
+        const foundUser = await User.updateOne({_id: user._id }, { $set: { "refreshToken": refreshToken }});
 
         console.log('login_post -> job done');
         res.status(200).json({ id: user._id , token: token });

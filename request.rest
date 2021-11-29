@@ -1,0 +1,19 @@
+POST http://localhost:3001/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "login": "dwayne1",
+    "password": "kwakwa5!"
+}
+
+###
+POST http://localhost:3001/api/grabUser HTTP/1.1
+# header name: header value
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOWE1Nzc3ZWE3M2FhMmEwNTZjNDcyYyIsImlhdCI6MTYzODEzOTI0NiwiZXhwIjoxNjM4MTM5Mjc2fQ.8zLrpB_zn4u1EdlutOfs_rhbzgh2OazPrGxvk1vMPZA
+
+Content-Type: application/json
+
+{
+    "userID": "619f723f683803812973014e"
+}
+// dokonczyc minuta 13:50

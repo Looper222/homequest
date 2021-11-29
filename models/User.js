@@ -49,7 +49,8 @@ const userSchema = new mongoose.Schema({
             _type: Number,
             /*time: Date*/
         }
-    ]
+    ],
+    refreshToken: String
 });
 
 // #endregion
