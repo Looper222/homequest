@@ -1,8 +1,10 @@
 const User = require('../models/User');
+const { decodeID } = require('../middleware/tokenMiddleware');
 
 // #region Task_Add
 const task_add = async (req, res) => {
-    const { parentID, userID, title,/* avatar, priority,*/ description, flashesAmount/*, time*/ } = req.body;
+    const parentID = decodeID(req);
+    const { userID, title,/* avatar, priority,*/ description, flashesAmount/*, time*/ } = req.body;
 
     const uniqueID = () => {
         return Math.floor(Math.random() * Date.now());
@@ -77,7 +79,8 @@ const task_grab = async (req, res) => {
 
 // #region Task_Complete
 const task_complete = async (req, res) => {
-    const { userID, taskID } = req.body;
+    const userID = decodeID(req);
+    const { taskID } = req.body;
 
     try {
         const task = await User.find({_id: userID}, { tasks: { $elemMatch: { _id: taskID }}, _id: 0});

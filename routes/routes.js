@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { authenticate } = require('../middleware/tokenMiddleware');
 const authController = require('../controllers/authController');
 const taskController = require('../controllers/taskController');
 
@@ -89,7 +90,6 @@ const router = Router();
  *      example:
  *          userID: 619a5777ea73aa2a056c472c
  *          funds: 888
- *     
  */
 
 // #endregion
@@ -191,10 +191,11 @@ const router = Router();
 
 // #region CONTROLLER_ROUTES_authController
 router.post('/api/signup', authController.signup_post);
-router.post('/api/memberReg', authController.member_reg_post);
+router.post('/api/memberReg', authenticate, authController.member_reg_post);
 router.post('/api/login', authController.login_post);
-router.post('/api/grabUser', authController.user_grab);
-router.post('/api/fundsSet', authController.funds_set);
+router.get('/api/grabUser', authenticate, authController.user_grab);
+router.post('/api/fundsSet', authenticate, authController.funds_set);
+router.post('/api/refresh', authController.token_refresh);
 // #endregion
 
 // #region SWAGGER_SCHEMAS_TASKS
@@ -406,12 +407,12 @@ router.post('/api/fundsSet', authController.funds_set);
 // #endregion
 
 // #region CONTROLLER_ROUTES_taskController
-router.post('/api/taskAdd', taskController.task_add);
-router.post('/api/taskGrab', taskController.task_grab);
-router.post('/api/taskDelete', taskController.task_delete);
-router.post('/api/taskEdit', taskController.task_edit);
-router.post('/api/taskComplete', taskController.task_complete);
-router.post('/api/taskApprove', taskController.task_approve);
+router.post('/api/taskAdd', authenticate, taskController.task_add);
+router.post('/api/taskGrab', authenticate, taskController.task_grab);
+router.post('/api/taskDelete', authenticate, taskController.task_delete);
+router.post('/api/taskEdit', authenticate, taskController.task_edit);
+router.post('/api/taskComplete', authenticate, taskController.task_complete);
+router.post('/api/taskApprove', authenticate, taskController.task_approve);
 // #endregion
 
 module.exports = router;
