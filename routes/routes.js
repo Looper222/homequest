@@ -90,7 +90,6 @@ const router = Router();
  *      example:
  *          userID: 619a5777ea73aa2a056c472c
  *          funds: 888
- *     
  */
 
 // #endregion
@@ -194,8 +193,9 @@ const router = Router();
 router.post('/api/signup', authController.signup_post);
 router.post('/api/memberReg', authController.member_reg_post);
 router.post('/api/login', authController.login_post);
-router.post('/api/grabUser', authenticate, authController.user_grab);
+router.get('/api/grabUser', authenticate, authController.user_grab);
 router.post('/api/fundsSet', authController.funds_set);
+router.post('/api/auth/refresh', authController.token_refresh);
 // #endregion
 
 // #region SWAGGER_SCHEMAS_TASKS
