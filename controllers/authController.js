@@ -163,7 +163,7 @@ const user_grab = async (req, res) => {
     const userID = decodeID(req);
 
     try {
-        const user = await User.findById(userID).select('-password').lean();
+        const user = await User.findById(userID).select('-password -refreshToken').lean();
 
         res.status(200).json(user);
     } catch (err) {

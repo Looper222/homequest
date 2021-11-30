@@ -9,7 +9,7 @@ Content-Type: application/json
 ###
 GET http://localhost:3001/api/grabUser HTTP/1.1
 # header name: header value
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOWE1Nzc3ZWE3M2FhMmEwNTZjNDcyYyIsImlhdCI6MTYzODIyNDQ5NCwiZXhwIjoxNjM4MjI0NTI5fQ.g0x7YGaz1sqizp_shUXnD1Ha3WQAw6hvRO17dWMwlg0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOWE1Nzc3ZWE3M2FhMmEwNTZjNDcyYyIsImlhdCI6MTYzODI4MTA5NSwiZXhwIjoxNjM4MzY3NDk1fQ.fwSV1Ws2q_pxIwnnOelGkh9SpEC531JbGIFDt-OINmA
 
 // dokonczyc minuta 13:50
 
