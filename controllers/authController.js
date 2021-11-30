@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const yenv = require('yenv');
-const env = yenv();
+const env = yenv('env.yaml', { envObject: {} });
 const { decodeID, decodeToken } = require('../middleware/tokenMiddleware');
 
 // #region ErrorHandlerLogin
