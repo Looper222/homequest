@@ -5,7 +5,7 @@ const routes = require('./routes/routes');
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const yenv = require('yenv');
-const env = yenv();
+const env = yenv('env.yaml');
 
 const options = {
     definition: {
