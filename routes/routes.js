@@ -5,7 +5,33 @@ const taskController = require('../controllers/taskController');
 
 const router = Router();
 
-// #region SWAGGER SCHEMA
+//#region SWAGGER_SCHEMA_SECURITY
+/**
+ * @swagger
+ * components:
+ *  securitySchemes:
+ *      bearerAuth:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ */
+//#endregion
+
+//#region SWAGGER_RESPONSES
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      UnauthorizedError:
+ *          description: Access token is missing or invalid
+ *      ForbiddenError:
+ *          description: Token is invalid
+ *      OK:
+ *          description: The operation has been successfully performed
+ */
+//#endregion
+
+// #region SWAGGER_SCHEMA_AUTH
 
 /**
  * @swagger
@@ -52,17 +78,11 @@ const router = Router();
  *      - $ref: '#/components/schemas/Signup'
  *      - type: object
  *      required:
- *          - parentID
  *          - login
  *          - password
  *          - fname
  *          - surname
- *      properties:
- *          parentID:
- *              type: string
- *              description: Parent account's id
  *      example:
- *          parentID: 619a5777ea73aa2a056c472c
  *          login: kid1
  *          password: kwakwa5!
  *          fname: kidf1
@@ -77,18 +97,14 @@ const router = Router();
  *      example:
  *          userID: 619a5777ea73aa2a056c472c
  *     FundsSet:
- *      allOf:
- *      - $ref: '#/components/schemas/IdNeeded'
- *      - type: object
+ *      type: object
  *      required:
- *          - userID
  *          - funds
  *      properties:
  *          funds:
  *              type: number
  *              description: Funds amount to set for user
  *      example:
- *          userID: 619a5777ea73aa2a056c472c
  *          funds: 888
  */
 
@@ -145,9 +161,17 @@ const router = Router();
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/MemberReg'
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
- *                  description: Member user has been created
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
  */
 // #endregion
 
@@ -155,20 +179,24 @@ const router = Router();
 /**
  * @swagger
  *  /api/grabUser:
- *      post:
+ *      get:
  *          tags:
  *              - User operations
  *          summary: Returns all user informations
- *          requestBody:
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/IdNeeded'
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
- *                  description: User data has been grabbed
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
  */
 // #endregion
+
 
 // #region FUNDS_SET
 /**
@@ -183,9 +211,17 @@ const router = Router();
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/FundsSet'
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
- *                  description: Amount of user's funds has been set
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
  */
 // #endregion
 
@@ -273,7 +309,7 @@ router.post('/api/refresh', authController.token_refresh);
  *                  description: You have to mow the lawn behind the house
  *                  flashesAmount: 20
  *                  _type: 1
- *          TaskID:
+ *          Task_User_ID:
  *              type: object
  *              required:
  *                  - userID
@@ -287,6 +323,16 @@ router.post('/api/refresh', authController.token_refresh);
  *                      description: ID of wanted task
  *              example:
  *                  userID: 619f723f683803812973014e
+ *                  taskID: 1395368568480
+ *          TaskID:
+ *              type: object
+ *              required:
+ *                  - taskID
+ *              properties:
+ *                  taskID:
+ *                      type: string
+ *                      description: ID of wanted task
+ *              example:
  *                  taskID: 1395368568480
  *
  */
@@ -304,10 +350,18 @@ router.post('/api/refresh', authController.token_refresh);
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/TaskAdd'
+ *                          $ref: '#/components/schemas/Task'
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
- *                  description: Task has been successfully added
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
  */
 // #endregion
 
@@ -324,9 +378,17 @@ router.post('/api/refresh', authController.token_refresh);
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/TaskEdit'
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
- *                  description: Task has been edited
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
  */
 // #endregion
 
@@ -343,9 +405,17 @@ router.post('/api/refresh', authController.token_refresh);
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/TaskID'
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
- *                  description: Task has been grabbed
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
  */
 // #endregion
 
@@ -361,10 +431,18 @@ router.post('/api/refresh', authController.token_refresh);
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/TaskID'
+ *                          $ref: '#/components/schemas/Task_User_ID'
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
- *                  description: Task has been deleted
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
  */
 // #endregion
 
@@ -381,9 +459,17 @@ router.post('/api/refresh', authController.token_refresh);
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/TaskID'
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
- *                  description: Task has been set to completed
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
  */
 // #endregion
 
@@ -399,10 +485,18 @@ router.post('/api/refresh', authController.token_refresh);
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/TaskID'
+ *                          $ref: '#/components/schemas/Task_User_ID'
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
- *                  description: Task has been set to approve
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
  */
 // #endregion
 

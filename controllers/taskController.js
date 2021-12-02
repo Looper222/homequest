@@ -58,7 +58,8 @@ const task_add = async (req, res) => {
 
 // #region Task_Grab
 const task_grab = async (req, res) => {
-    const { userID, taskID } =  req.body;
+    const userID = decodeID(req);
+    const { taskID } =  req.body;
 
     try {
         // const task = await User.aggregate([{"$match": {"tasks._id": taskID }}, {"$group": { _id: "$_id"}}]);
