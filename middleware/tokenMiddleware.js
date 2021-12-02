@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const yenv = require('yenv');
-const env = yenv();
+const env = yenv('env.yaml', { envObject: {}});
 
 
 const authenticate = (req, res, next) => {
