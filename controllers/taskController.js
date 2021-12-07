@@ -48,7 +48,7 @@ const task_add = async (req, res) => {
         };
         const parentUp = await User.updateOne({_id: parentID}, { $addToSet: { tasks: taskSec}});
 
-        res.status(200).json(task);
+        res.status(201).json(task);
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "Task was not added"});
@@ -108,7 +108,8 @@ const task_complete = async (req, res) => {
         }
         const parentDel = await User.updateOne({_id: parentID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
         const parentUp = await User.updateOne({_id: parentID}, { $addToSet: { tasks: taskPData}});
-        res.status(200).json(taskData);
+        // res.status(200).json(taskData);
+        res.sendStatus(200);
     } catch (err) {
         console.log(err);
         res.status(400).json("task_complete operation failed");

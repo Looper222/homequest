@@ -28,6 +28,8 @@ const router = Router();
  *          description: Token is invalid
  *      OK:
  *          description: The operation has been successfully performed
+ *      Created:
+ *          description: The operation has been successfully created
  */
 //#endregion
 
@@ -143,8 +145,10 @@ const router = Router();
  *                      schema:
  *                          $ref: '#/components/schemas/Signup'
  *          responses:
- *              200:
- *                  description: User has been registered
+ *              201:
+ *                  $ref: '#/components/responses/Created'
+ *                  content:
+ *                      'application/json': {}
  */
 // #endregion
 
@@ -164,8 +168,8 @@ const router = Router();
  *          security:
  *              - bearerAuth: []
  *          responses:
- *              200:
- *                  $ref: '#/components/responses/OK'
+ *              201:
+ *                  $ref: '#/components/responses/Created'
  *                  content:
  *                      'application/json': {}
  *              401:
@@ -197,12 +201,11 @@ const router = Router();
  */
 // #endregion
 
-
 // #region FUNDS_SET
 /**
  * @swagger
  *  /api/fundsSet:
- *      post:
+ *      put:
  *          tags:
  *              - User operations
  *          summary: Setting amount of user's funds
@@ -230,7 +233,7 @@ router.post('/api/signup', authController.signup_post);
 router.post('/api/memberReg', authenticate, authController.member_reg_post);
 router.post('/api/login', authController.login_post);
 router.get('/api/grabUser', authenticate, authController.user_grab);
-router.post('/api/fundsSet', authenticate, authController.funds_set);
+router.put('/api/fundsSet', authenticate, authController.funds_set);
 router.post('/api/refresh', authController.token_refresh);
 // #endregion
 
@@ -354,8 +357,8 @@ router.post('/api/refresh', authController.token_refresh);
  *          security:
  *              - bearerAuth: []
  *          responses:
- *              200:
- *                  $ref: '#/components/responses/OK'
+ *              201:
+ *                  $ref: '#/components/responses/Created'
  *                  content:
  *                      'application/json': {}
  *              401:
@@ -450,7 +453,7 @@ router.post('/api/refresh', authController.token_refresh);
 /**
  * @swagger
  *   /api/taskComplete:
- *      post:
+ *      put:
  *          tags:
  *              - Task operations
  *          summary: Setting to complete existing task
@@ -505,7 +508,7 @@ router.post('/api/taskAdd', authenticate, taskController.task_add);
 router.post('/api/taskGrab', authenticate, taskController.task_grab);
 router.post('/api/taskDelete', authenticate, taskController.task_delete);
 router.post('/api/taskEdit', authenticate, taskController.task_edit);
-router.post('/api/taskComplete', authenticate, taskController.task_complete);
+router.put('/api/taskComplete', authenticate, taskController.task_complete);
 router.post('/api/taskApprove', authenticate, taskController.task_approve);
 // #endregion
 

@@ -93,7 +93,7 @@ const signup_post = async (req, res) => {
         const foundUser = await User.updateOne({_id: user._id }, { $set: { "refreshToken": refreshToken }});
 
         console.log('signup_post -> job done');
-        res.status(200).json({
+        res.status(201).json({
             user: user._id,
             token: token,
             refreshToken: refreshToken
@@ -128,7 +128,7 @@ const member_reg_post = async (req, res) => {
         }
         const child = await User.updateOne({_id: member._id}, { $addToSet: { members: parentInfo}});
         console.log(member);
-        res.status(200).json(member);
+        res.status(201).json(member);
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "member reg error"});
@@ -182,19 +182,18 @@ const funds_set = async (req, res) => {
 
     try {
         const fundsInfo = await User.updateOne({_id: userID}, {$set: { "funds": funds }});
-        const wallet = await User.findById(userID).select(' funds ').lean();
+        // const wallet = await User.findById(userID).select(' funds ').lean();
 
-        console.log(fundsInfo);
-        console.log(wallet);
-        res.status(200).json({ userID: wallet._id, funds: wallet.funds});
+        // console.log(fundsInfo);
+        // console.log(wallet);
+        res.sendStatus(200);
     } catch (err) {
         console.log(err);
-        res.status(400).json({ error: "funds haven't been set"});
+        res.status(400);
     }
 }
 
 // #endregion
-
 
 // #region TOKEN_REFRESH
 const token_refresh = async (req, res) => {
