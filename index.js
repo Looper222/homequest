@@ -1,4 +1,3 @@
-const { application } = require("express");
 const express = require("express");
 const mongoose = require('mongoose');
 const routes = require('./routes/routes');
@@ -44,10 +43,6 @@ app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });
 
-// const username = 'admin-user';
-// const userpass = 'hypahypakwakwa';
-
-// const dbURI = `mongodb+srv://${username}:${userpass}@nodetuts.je9tx.mongodb.net/homequest?retryWrites=true&w=majority`;
 const dbURI = `mongodb+srv://${env.USER_NAME}:${env.USER_PASS}@nodetuts.je9tx.mongodb.net/homequest?retryWrites=true&w=majority`;
 mongoose.connect(dbURI)
     .then(() => {

@@ -48,7 +48,7 @@ const task_add = async (req, res) => {
         };
         const parentUp = await User.updateOne({_id: parentID}, { $addToSet: { tasks: taskSec}});
 
-        res.status(200).json(task);
+        res.status(201).json(task);
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "Task was not added"});
@@ -62,8 +62,6 @@ const task_grab = async (req, res) => {
     const { taskID } =  req.body;
 
     try {
-        // const task = await User.aggregate([{"$match": {"tasks._id": taskID }}, {"$group": { _id: "$_id"}}]);
-        // const task = await User.aggregate([{"$arraElemAt": ["$tasks", 0]}]);
         const task = await User.find({_id: userID}, { tasks: { $elemMatch: { _id: taskID }}, _id: 0});
         const person = await User.findById(userID).select(' fname -_id').lean();
 
@@ -74,6 +72,22 @@ const task_grab = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: "task was not grabbed"});
+    }
+}
+// #endregion
+
+// #region Tasks_Grab_All
+const tasks_grab_all = async (req, res) => {
+    const userID = decodeID(req);
+
+    try {
+        const tasks = await User.findById(userID).select(' tasks -_id').lean();
+
+        console.log(tasks);
+        res.status(200).send(tasks);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({error: 'tasks were not grabbed'});
     }
 }
 // #endregion
@@ -108,7 +122,8 @@ const task_complete = async (req, res) => {
         }
         const parentDel = await User.updateOne({_id: parentID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
         const parentUp = await User.updateOne({_id: parentID}, { $addToSet: { tasks: taskPData}});
-        res.status(200).json(taskData);
+        // res.status(200).json(taskData);
+        res.sendStatus(200);
     } catch (err) {
         console.log(err);
         res.status(400).json("task_complete operation failed");
@@ -119,6 +134,7 @@ const task_complete = async (req, res) => {
 // #region Task_Approve
 
 const task_approve = async (req, res) => {
+    const parentID = decodeID(req);
     const { userID, taskID } = req.body;
 
     try {
@@ -134,7 +150,7 @@ const task_approve = async (req, res) => {
         const childFData = await User.updateOne({_id: userID}, { $set: { funds: childFunds.funds + taskData.flashesAmount}});
         const childName = await User.findById(userID).select(' fname members -_id').lean();
         console.log(childName);
-        const parentID = childName.members[0]._id;
+        // const parentID = childName.members[0]._id;
         const parentFunds = await User.findById(parentID).select('blockedFunds -_id').lean();
         const parentFData = await User.updateOne({_id: parentID}, { $set: { blockedFunds: parentFunds.blockedFunds - taskData.flashesAmount}});
         const taskPData = {
@@ -150,10 +166,11 @@ const task_approve = async (req, res) => {
         }
         const parentDel = await User.updateOne({_id: parentID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
         const parentUp = await User.updateOne({_id: parentID}, { $addToSet: { tasks: taskPData}});
-        res.status(200).json(taskData);
+        // res.status(200).json(taskData);
+        res.sendStatus(200);
     } catch (err) {
         console.log(err);
-        res.status(400).json("task_complete operation failed");
+        res.status(400).json("task_approve operation failed");
     }
 }
 
@@ -185,18 +202,20 @@ const task_edit = async (req, res) => {
         res.status(200).json(found);
     } catch (err) {
         console.log(err);
-        res.status(400).json({ error: "task hasn't been deleted"});
+        res.status(400).json({ error: "task hasn't been edited"});
     }
 }
 // #endregion
 
 // #region Task_Delete
 const task_delete = async (req, res) => {
+    const parentID = decodeID(req);
     const { userID, taskID } = req.body;
 
     try {
         const task = await User.updateOne({_id: userID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
         const found = await User.find({_id: userID}, { tasks: 1});
+        const parentTask = await User.updateOne({_id: parentID}, { $pull: { tasks: { _id: taskID}}}, {upsert: false, multi: true});
         console.log(task);
         res.status(200).json(found);
     } catch (err) {
@@ -212,5 +231,6 @@ module.exports = {
     task_complete,
     task_edit,
     task_delete,
-    task_approve
+    task_approve,
+    tasks_grab_all
 }
