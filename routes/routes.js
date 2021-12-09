@@ -426,7 +426,7 @@ router.post('/api/refresh', authController.token_refresh);
 /**
  * @swagger
  *  /api/taskDelete:
- *      post:
+ *      delete:
  *          tags:
  *              - Task operations
  *          summary: Deleting existing task
@@ -480,10 +480,10 @@ router.post('/api/refresh', authController.token_refresh);
 /**
  * @swagger
  *   /api/taskApprove:
- *      post:
+ *      put:
  *          tags:
  *              - Task operations
- *          summary: Set to appove existing task
+ *          summary: Set to approved existing task
  *          requestBody:
  *              content:
  *                  application/json:
@@ -503,13 +503,36 @@ router.post('/api/refresh', authController.token_refresh);
  */
 // #endregion
 
+// #region SWAGGER_TASKs_GRAB_ALL
+/**
+ * @swagger
+ *  /api/tasks/grabAll:
+ *      get:
+ *          tags:
+ *              - Task operations
+ *          summary: Grabbing all user's tasks
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  $ref: '#/components/responses/OK'
+ *                  content:
+ *                      'application/json': {}
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/ForbiddenError'
+ */
+// #endregion
+
 // #region CONTROLLER_ROUTES_taskController
 router.post('/api/taskAdd', authenticate, taskController.task_add);
 router.post('/api/taskGrab', authenticate, taskController.task_grab);
-router.post('/api/taskDelete', authenticate, taskController.task_delete);
+router.delete('/api/taskDelete', authenticate, taskController.task_delete);
 router.post('/api/taskEdit', authenticate, taskController.task_edit);
 router.put('/api/taskComplete', authenticate, taskController.task_complete);
-router.post('/api/taskApprove', authenticate, taskController.task_approve);
+router.put('/api/taskApprove', authenticate, taskController.task_approve);
+router.get('/api/tasks/grabAll', authenticate, taskController.tasks_grab_all);
 // #endregion
 
 module.exports = router;
